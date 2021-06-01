@@ -59,22 +59,22 @@ try:
     #loop through class files
     for k in range(6):
         if(k==0):
-            route = r"C:\research\Data\pitcher"
+            route = r"C:\MCNE\data\pitcher"
             gest_class = 1 
         elif(k==1):
-            route = r"C:\research\Data\beer"
+            route = r"C:\MCNE\data\beer"
             gest_class = 2
         elif(k==2):
-            route = r"C:\research\Data\shot"
+            route = r"C:\MCNE\data\shot"
             gest_class = 3
         elif(k==3):
-            route = r"C:\research\Data\one"
+            route = r"C:\MCNE\data\one"
             gest_class = 4
         elif(k==4):
-            route = r"C:\research\Data\two"
+            route = r"C:\MCNE\data\two"
             gest_class = 5
         elif(k==5):
-            route = r"C:\research\Data\three"
+            route = r"C:\MCNE\data\three"
             gest_class = 6
           
         #lists directory contents of media and appends their path to a list
@@ -90,7 +90,7 @@ try:
         for gesture in videoPaths:
             
             #Tracks frames and gesture class
-            output = open(r"C:\research\Data\MyDataset\Data\Class_Frames.txt","a")
+            output = open(r"C:\MCNE\data\OP_landmarks\data\temp_load\Class_Frames.txt","a")
             output.write(str(clip_count) + "\t" + str(gest_class) + "\t" + str(frame_count + 1) + "\t") 
             
             #Tracks the clip count
@@ -106,11 +106,6 @@ try:
             #Temp frame count
             temp_count = 0
 
-            # Some characteristics from the original video
-            w_frame, h_frame = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-            fps, frames = cap.get(cv2.CAP_PROP_FPS), cap.get(cv2.CAP_PROP_FRAME_COUNT)
-            # Here you can define your croping values
-            
             #Open video frames
             while cap.isOpened():
                 
@@ -138,10 +133,10 @@ try:
                     cv2.imshow("Acquired Hand Keypoints", datum.cvOutputData)
 
                     #Raw data (frame + unnormalized keypoints).
-                    File_output = open(r"C:\research\Data\MyDataset\Data\Face_data.txt","a")
+                    File_output = open(r"C:\MCNE\data\OP_landmarks\data\temp_load\Face_data.txt","a")
                     
                     #Normalized data 
-                    File_output2 = open(r"C:\research\Data\MyDataset\Data\Normalized_data.txt","a")
+                    File_output2 = open(r"C:\MCNE\data\OP_landmarks\data\temp_load\Normalized_data.txt","a")
 
                     #Initalize value variables
                     raw_coords = ""
