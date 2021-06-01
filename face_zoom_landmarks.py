@@ -61,24 +61,24 @@ try:
     frame_count = 0
 
     #loop through class files
-    for k in range(1):
+    for k in range(6):
         if(k==0):
-            route = r"C:\research\Data\Demonstration"
+            route = r"C:\MCNE\data\pitcher"
             gest_class = 1 
         elif(k==1):
-            route = r"C:\research\Data\beer"
+            route = r"C:\MCNE\data\beer"
             gest_class = 2
         elif(k==2):
-            route = r"C:\research\Data\shot"
+            route = r"C:\MCNE\data\shot"
             gest_class = 3
         elif(k==3):
-            route = r"C:\research\Data\one"
+            route = r"C:\MCNE\data\one"
             gest_class = 4
         elif(k==4):
-            route = r"C:\research\Data\two"
+            route = r"C:\MCNE\data\two"
             gest_class = 5
         elif(k==5):
-            route = r"C:\research\Data\three"
+            route = r"C:\MCNE\data\three"
             gest_class = 6
           
           
@@ -95,7 +95,7 @@ try:
         for face in videoPaths:
             
             #Tracks frames and gesture class
-            output = open(r"C:\research\Data\MyDataset\Data\Class_Frames.txt","a")
+            output = open(r"C:\MCNE\data\OP_landmarks\data\temp_load\Class_Frames.txt","a")
             output.write(str(clip_count) + "\t" + str(gest_class) + "\t" + str(frame_count + 1) + "\t") 
             
             #Tracks the clip count
@@ -142,79 +142,41 @@ try:
                     cv2.imshow("Body Landmarks", opframe)
 
                     #Raw data (frame + unnormalized keypoints).
-                    File_output = open(r"C:\research\Data\MyDataset\Data\Face_data.txt","a")
+                    File_output = open(r"C:\MCNE\data\OP_landmarks\data\temp_load\Face_data.txt","a")
   
                     
                     #Normalized data 
-                    File_output2 = open(r"C:\research\Data\MyDataset\Data\Normalized_data.txt","a")
+                    File_output2 = open(r"C:\MCNE\data\OP_landmarks\data\temp_load\Normalized_data.txt","a")
 
                     #Initalize value variables
                     raw_coords = ""
                     normalized_coords = ""
                     counter = 0
 
-                    #20 handkeypoints
-                    
-                    #for i in range(21):
-                    #    #For raw data
-                    #    raw_temp = ""
-
-                    #    #For "normalized" data
-                    #    norm_temp = ""
-
-                    #    #Neck point - Hip point
-                    #    #scale =  math.floor(datum.poseKeypoints[0][8][1] - datum.poseKeypoints[0][1][1])
-
-                        
-                    #    #For each hand
-                    #    for hand in range(2):
-                    #        #Second loop for coords 
-                    #        for j in range(2):
-                    #            ##need hand 1 xy and hand 2 xy  
-                    #            #[hand] [array] [keypoint x y c] [x and y pair] 
-                    #            raw_temp += (str(datum.handKeypoints[hand][0][i][j].round(2)) + " ")
-
-                    #    #Normalized loop        
-                    #    for j in range(2):
-                    #        #Subtract from wrists for hands, divide by length of body to normalize/scale
-                    #        #0 = left hand, 1 = right hand
-                    #        norm_temp += (str(((datum.handKeypoints[0][0][i][j] - datum.poseKeypoints[0][4][j])/scale).round(2)) + " "  +
-                    #            (str(((datum.handKeypoints[1][0][i][j] - datum.poseKeypoints[0][7][j])/scale).round(2)) + " "))
-
-                    #    normalized_coords += str(norm_temp)  
-                    #    raw_coords += raw_temp 
-                        #store raw data
-
-                        # Croping the frame
-                        #bounding box length
+                    #Bounding box parameters
                     box = 70
-                        #print(str(datum.faceKeypoints[0][3][0]))
-
-                        #coords of middle of face. 
-
+                       
                     x,y,h,w = int(datum.faceKeypoints[0][30][0]),int(datum.faceKeypoints[0][30][1]),int(datum.faceKeypoints[0][27][1]),int(datum.faceKeypoints[0][13][0])
                     x,y,h,w = x-box,y-box,h+box,w+box
                     crop_frame = frame[y:h, x:w]
                     width = w-x
                     height = h-y 
-
                     inc = 3
+
+                    #Crop frame and  resize
                     crop_frame = cv2.resize(crop_frame,((width*inc),(height*inc)))
 
-                    #datum = op.Datum()
-                    #cap = cv2.VideoCapture(gesture)
-                    #fps = cap.get(cv2.CAP_PROP_FPS)
-
+                    #Rerun OpenPose on enlarged image 
                     datum.cvInputData = crop_frame
 
-                    #datum.handRectangles = handRectangles
                     opWrapper.emplaceAndPop(op.VectorDatum([datum]))
                     
                     opframe=datum.cvOutputData 
                     cv2.imshow('Face Landmarks',opframe)
 
+                    #scale by bridge of nose to chin
                     scale = math.floor(datum.faceKeypoints[0][8][1] - datum.faceKeypoints[0][27][1])
-                    #scale =  math.floor(datum.poseKeypoints[0][8][1] - datum.poseKeypoints[0][1][1])
+
                     
                                 #Begin face landmark documentation
                     #-------------------------------------------------------------#
@@ -236,44 +198,8 @@ try:
                            raw_temp +=(str(datum.faceKeypoints[0][47+i][j].round(2)) + " ")
                        normalized_coords += str(norm_temp)  
                        raw_coords += raw_temp 
-                        #--------------------------------------------#
-                        #First loop hands
-                        #for hand in range(2):
-                            #Second loop for coords 
-                            #for j in range(2):
-                                ##need hand 1 xy and hand 2 xy  
-                                #[hand] [array] [keypoint x y c] [x and y pair] 
-                                #tempString += (str(datum.handKeypoints[hand][0][i][j].round(2)) + " ")
-                                
-                        #for j in range(2):
-
-                            #normalizedValue += (str(datum.handKeypoints[0][0][i][j] - datum.poseKeypoints[0][4][j]) + " "  +
-                                #(str(datum.handKeypoints[1][0][i][j] - datum.poseKeypoints[0][7][j])) + " ")
-                                       
-                        #handkeypoints x, y are subtracted by wrist keypoint to normalize. 
-                        #0 = left hand, 1 = right hand
-                        
-                        #normalized_Values += str(normalizedValue)  
-                        #keyPointsString += tempString 
-
-                    #Do it for the arms now 
-
-                    #for arms in range(2,8):
-                        #tempString = ""
-
-                        #normalizedValue = "" 
-
-                        #for j in range(2):
-
-                           #tempString +=(str(datum.poseKeypoints[0][arms][j].round(2)) + " ")
-                            #normalizedValue += (str(datum.poseKeypoints[0][arms][j] - datum.poseKeypoints[0][8][j]) + " ")
-                        
-                        #normalized_Values += str(normalizedValue)  
-                        #keyPointsString += tempString 
-
-                    #---------------------------------------------------------------#
-                    #Begin face cropping/openpose 
-
+                    #--------------------------------------------#
+                     
                   
                     #Write to raw data file
                     File_output.write(str(gest_class) + "\t")
